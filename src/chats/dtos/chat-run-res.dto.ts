@@ -1,4 +1,4 @@
-export interface HistoryItem {
+export class HistoryItem {
   type: 'sender' | 'receiver';
   content: string;
 }
@@ -7,7 +7,7 @@ export interface HistoryItem {
  * ChatDto
  */
 export class ChatRunResDto {
-  id: number;
+  taskId: string;
   history: HistoryItem[];
   query: string;
 }

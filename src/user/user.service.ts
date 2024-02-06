@@ -1,5 +1,5 @@
 import { pick, map } from 'lodash';
-import { Transaction, SaveOptions } from 'sequelize';
+import { Transaction, SaveOptions, Op } from 'sequelize';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
@@ -121,6 +121,32 @@ export class UserService {
     return instance;
   }
 
+  /**
+   * 增加积分
+   * @param id
+   * @param userCredit
+   * @returns
+   */
+  async incCreditByPk(
+    id: number,
+    incCredit: number,
+    transaction: Transaction,
+  ): Promise<number> {
+    const [affectedCount] = await this.userModel.update(
+      {
+        credit: this.userModel.sequelize.literal(`credit + ${incCredit}`),
+      },
+      {
+        where: {
+          id,
+        },
+        transaction,
+      },
+    );
+
+    return affectedCount;
+  }
+
   // 减少 credit
   async reduceCreditByPk(id: number, userCredit: number): Promise<number> {
     /**
@@ -134,7 +160,7 @@ export class UserService {
         where: {
           id,
           credit: {
-            $gte: userCredit,
+            [Op.gte]: userCredit,
           },
         },
       },

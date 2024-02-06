@@ -21,8 +21,7 @@ import { Roles, SerializerClass, User } from '../common/decorators';
 import { RolesGuard } from '../common/auth';
 import { ROLE_AUTHENTICATED, ROLE_SUPER_ADMIN } from '../common/constants';
 import { RequestUser } from '../common/interfaces';
-import { ChatDto } from './chat.dto';
-import { ChatRunResDto } from './chat-run-res.dto';
+import { ChatRunResDto, ChatDto, ChatRunRepDto } from './dtos';
 
 import { config } from '../../config';
 import { ChatService } from './chat.service';
@@ -48,7 +47,6 @@ export class ChatController {
    *
    */
   @Get()
-  @UseGuards(RolesGuard)
   @ApiOperation({
     summary: '可用列表',
   })
@@ -71,9 +69,9 @@ export class ChatController {
   @UseGuards(RolesGuard)
   @Roles(ROLE_AUTHENTICATED)
   @ApiOperation({
-    summary: '获取当前用户',
+    summary: '执行生成',
   })
-  @SerializerClass(ChatDto)
+  @SerializerClass(ChatRunRepDto)
   @ApiParam({
     name: 'id',
     required: true,
@@ -84,7 +82,7 @@ export class ChatController {
     @Param('id') id: number,
     @Body() resData: ChatRunResDto,
     @User() user: RequestUser,
-  ): Promise<RequestUser> {
+  ): Promise<ChatRunRepDto> {
     const ins = await this.chatService.findByPk(id);
 
     if (!ins.enabled) {
@@ -101,11 +99,11 @@ export class ChatController {
         ins.apiKey,
         resData.query,
         resData.history,
+        resData.taskId,
       );
-      console.log(result);
+      return result;
     } catch (error) {
       throw new Error(error.message);
     }
-    return user;
   }
 }

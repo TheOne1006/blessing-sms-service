@@ -15,7 +15,8 @@ import {
   ApiResponse,
   ApiQuery,
 } from '@nestjs/swagger';
-
+import { Logger } from 'winston';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { SerializerInterceptor } from '../../common/interceptors/serializer.interceptor';
 import { Roles, SerializerClass, User } from '../../common/decorators';
 import { RolesGuard } from '../../common/auth';
@@ -45,6 +46,7 @@ export class CommandCodeController {
     private readonly userService: UserService,
     @Inject(Sequelize)
     protected readonly sequelize: Sequelize,
+    @Inject(WINSTON_MODULE_PROVIDER) protected readonly logger: Logger,
   ) {}
 
   @Get('redeem')
@@ -60,10 +62,12 @@ export class CommandCodeController {
   @SerializerClass(UserDto)
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(
-    @Query() code: string,
+    @Query('code') code: string,
     @User() owner: RequestUser,
   ): Promise<UserDto> {
     const commandCodeIns = await this.mainService.findOne({ code });
+
+    console.log('commandCodeIns', commandCodeIns);
 
     if (!commandCodeIns) {
       throw new Error('无效兑换码');
@@ -89,22 +93,21 @@ export class CommandCodeController {
         transaction,
       );
 
-      const user = await this.userService.updateByPk(
+      await this.userService.incCreditByPk(
         owner.id,
-        {
-          credit: owner.credit + commandCodeIns.credit,
-        },
+        commandCodeIns.credit,
         transaction,
       );
 
       await transaction.commit();
-
-      return user;
     } catch (error) {
+      this.logger.error(error.message);
       await transaction.rollback();
       // throw error;
     }
 
-    return owner as UserDto;
+    const user = await this.userService.findByPk(owner.id);
+
+    return user;
   }
 }

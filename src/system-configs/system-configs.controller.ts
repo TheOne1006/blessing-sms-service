@@ -78,8 +78,43 @@ export class SystemConfigsController {
   @UseInterceptors(CacheInterceptor)
   @CacheKey('config-lists')
   @ApiOperation({ summary: '配置列表' })
+  @SerializerClass(SystemConfigDto)
   async findAll(): Promise<SystemConfigDto[]> {
     const list = await this.systemConfigsService.findAll();
     return list;
+  }
+
+  @Get('/wx-mini')
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('wx-mini-config')
+  @ApiOperation({ summary: '配置信息' })
+  async findAllWxMini(): Promise<{ [key: string]: any }> {
+    const list = await this.systemConfigsService.findAll();
+    const dist = {};
+
+    list.forEach((item) => {
+      switch (item.format) {
+        case 'array':
+          dist[item.key] = item.arrayValue;
+          break;
+        case 'int':
+          dist[item.key] = item.intValue;
+          break;
+        case 'float':
+          dist[item.key] = item.floatValue;
+          break;
+        case 'json':
+          dist[item.key] = item.jsonValue;
+          break;
+        case 'boolean':
+          dist[item.key] = item.booleanValue;
+          break;
+        default:
+          dist[item.key] = item.textValue;
+          break;
+      }
+    });
+
+    return dist;
   }
 }

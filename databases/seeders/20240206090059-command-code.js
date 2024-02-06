@@ -15,6 +15,13 @@ module.exports = {
           created_at: new Date(),
           updated_at: new Date(),
         },
+        {
+          id: 2,
+          code: '2024',
+          credit: 20,
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
       ],
       {},
     );

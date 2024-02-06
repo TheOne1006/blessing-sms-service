@@ -4,7 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { AxiosError } from 'axios';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { HistoryItem } from './chat-run-res.dto';
+import { HistoryItem, FlowiseResDto, ChatRunRepDto } from './dtos';
 
 interface FlowHistoryItem {
   message: string;
@@ -23,19 +23,21 @@ export class FlowiseService {
   ) {}
 
   private formatHistory(list: HistoryItem[]): FlowHistoryItem[] {
-    return list.map((item) => {
-      return {
-        type: item.type === 'sender' ? 'userMessage' : 'apiMessage',
-        message: item.content,
-      };
-    });
+    return list
+      .filter((item) => item.content && item.type)
+      .map((item) => {
+        return {
+          type: item.type === 'sender' ? 'userMessage' : 'apiMessage',
+          message: item.content,
+        };
+      });
   }
 
-  private formatResult(res) {
+  private formatResult(res: FlowiseResDto): ChatRunRepDto {
     return {
-      chatId: res['chatId'],
+      taskId: res.chatId,
       type: 'receiver',
-      content: res['text'],
+      content: res.text,
     };
   }
 
@@ -44,33 +46,36 @@ export class FlowiseService {
     apiKey: string,
     input: string,
     history: HistoryItem[],
-  ) {
+    taskId: string = '',
+  ): Promise<ChatRunRepDto> {
     const formattedHistory = this.formatHistory(history);
-    const body = {
-      input,
+    const body: any = {
+      question: input,
       history: formattedHistory,
     };
 
+    if (taskId) {
+      body.chatId = taskId;
+    }
+
     const flowiseRes = await firstValueFrom(
       this.httpService
-        .post(apiUrl, {
+        .post<FlowiseResDto>(apiUrl, body, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${apiKey}`, // apiKey,
           },
-          body: body,
         })
         .pipe(
           catchError((error: AxiosError) => {
-            console.log('AxiosError', error);
+            // console.error('AxiosError', error);
             const errorData: any = error.response.data;
             this.logger.error('error:', errorData, ' with endpoint:', apiUrl);
-            throw Error(`错误 with ${apiUrl}, ${errorData?.errmsg}`);
+            throw Error(`错误 with ${apiUrl}, ${errorData}`);
           }),
         ),
     );
 
-    this.logger.info(flowiseRes);
     return this.formatResult(flowiseRes.data);
   }
 }

@@ -20,6 +20,7 @@ import { RequestUser } from '../common/interfaces';
 
 import { config } from '../../config';
 import { SuggestService } from './suggent.service';
+import { CreateSuggestDto } from './create-suggent.dto';
 import { SuggestDto } from './suggent.dto';
 
 const prefix = config.API_V1;
@@ -45,7 +46,7 @@ export class SuggentController {
   @SerializerClass(SuggestDto)
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(
-    @Body() newDataDto: Pick<SuggestDto, 'suggest'>,
+    @Body() newDataDto: CreateSuggestDto,
     @User() owner: RequestUser,
   ): Promise<SuggestDto> {
     const newData = await this.mainService.create(newDataDto.suggest, owner.id);

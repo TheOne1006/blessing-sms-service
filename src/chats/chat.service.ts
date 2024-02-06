@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { WhereOptions } from 'sequelize';
 
 import { Chat } from './chat.entity';
-import { ChatDto } from './chat.dto';
+import { ChatDto } from './dtos/chat.dto';
 
 /**
  * CommandCode Service

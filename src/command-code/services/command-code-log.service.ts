@@ -18,7 +18,7 @@ export class CommandCodeLogService {
     createDataDto: Partial<CommandCodeLog>,
     transaction: Transaction,
   ): Promise<CommandCodeLog> {
-    const data = new this.mainModel({
+    const data = new CommandCodeLog({
       ...createDataDto,
     });
 
