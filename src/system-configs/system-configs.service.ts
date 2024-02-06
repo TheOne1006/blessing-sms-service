@@ -1,5 +1,7 @@
 import * as _ from 'lodash';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+
 import { SystemConfig } from './system-configs.entity';
 import {
   UpdateSystemConfigDto,
@@ -10,7 +12,7 @@ import {
 @Injectable()
 export class SystemConfigsService {
   constructor(
-    @Inject(SystemConfig)
+    @InjectModel(SystemConfig)
     private readonly mainModel: typeof SystemConfig,
   ) {}
 

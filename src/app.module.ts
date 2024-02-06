@@ -12,7 +12,8 @@ import { AppService } from './app.service';
 import { UsersModule } from './user/user.module';
 import { SuggestModule } from './suggent/suggent.module';
 import { CommandCodeModule } from './command-code/commandCode.module';
-// import { SystemConfigsModule } from './system-configs/system-configs.module';
+import { SystemConfigsModule } from './system-configs/system-configs.module';
+import { ChatModule } from './chats/chat.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { CommandCodeModule } from './command-code/commandCode.module';
     UsersModule,
     SuggestModule,
     CommandCodeModule,
-    // SystemConfigsModule,
+    SystemConfigsModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

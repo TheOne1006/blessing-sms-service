@@ -29,7 +29,7 @@ export class SystemConfigBase {
   })
   @Length(5, 20)
   @IsString({
-    message: '正确填写key值'
+    message: '正确填写key值',
   })
   key: string;
 

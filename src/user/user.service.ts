@@ -120,4 +120,26 @@ export class UserService {
 
     return instance;
   }
+
+  // 减少 credit
+  async reduceCreditByPk(id: number, userCredit: number): Promise<number> {
+    /**
+     * 减少 userCredit 当 credit > userCredit
+     */
+    const [affectedCount] = await this.userModel.update(
+      {
+        credit: this.userModel.sequelize.literal(`credit - ${userCredit}`),
+      },
+      {
+        where: {
+          id,
+          credit: {
+            $gte: userCredit,
+          },
+        },
+      },
+    );
+
+    return affectedCount;
+  }
 }
