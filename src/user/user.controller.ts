@@ -17,7 +17,11 @@ import {
 import { SerializerInterceptor } from '../common/interceptors/serializer.interceptor';
 import { Roles, SerializerClass, User } from '../common/decorators';
 import { RolesGuard } from '../common/auth';
-import { ROLE_AUTHENTICATED, ROLE_SUPER_ADMIN } from '../common/constants';
+import {
+  ROLE_AUTHENTICATED,
+  ROLE_SUPER_ADMIN,
+  ROLE_USER,
+} from '../common/constants';
 import { RequestUser } from '../common/interfaces';
 import { UserDto } from './dtos';
 
@@ -93,21 +97,38 @@ export class UserController {
     try {
       const wxInfo = await this.wxService.wxCode2session(code);
 
-      console.log(wxInfo);
+      const findUser = await this.userService.findOne({
+        openid: wxInfo.openid,
+      });
 
-      if (wxInfo.data.errcode && wxInfo.data.errmsg) {
-        throw new Error(wxInfo.data.errmsg);
+      const newToken = this.userService.generateToken(wxInfo.openid);
+
+      if (findUser) {
+        // 更新
+        const updateInfo = {
+          token: newToken,
+          unionid: wxInfo.unionid,
+          session: wxInfo.session_key,
+        };
+
+        const user = await this.userService.updateByPk(findUser.id, updateInfo);
+
+        return user;
       }
 
-      return {
-        id: 1,
+      // 插入
+      const newUserInfo = {
         openid: wxInfo.openid,
         unionid: wxInfo.unionid,
         session: wxInfo.session_key,
-        token: '',
-        credit: 0,
-        roles: [],
-      } as any;
+        token: newToken,
+        // 基础 积分
+        credit: 30,
+        roles: [ROLE_AUTHENTICATED, ROLE_USER],
+      };
+
+      const user = await this.userService.create(newUserInfo);
+      return user;
     } catch (error) {
       console.log(error);
       throw new Error(`wxCode2session error with ${error.message}`);

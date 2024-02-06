@@ -15,6 +15,12 @@ export class Chat extends Model<Chat> {
   @Column({ type: DataType.STRING, allowNull: false })
   title: string;
 
+  @Column({ type: DataType.STRING, allowNull: true })
+  welcome: string;
+
+  @Column({ type: DataType.STRING, allowNull: false, field: 'icon_url' })
+  iconUrl: string;
+
   @Column({ type: DataType.STRING, allowNull: false, field: 'api_url' })
   apiUrl: string;
 

@@ -17,9 +17,19 @@ module.exports = {
           comment: 'id',
         },
         title: {
-          type: TEXT,
+          type: STRING(150),
           allowNull: false,
           comment: '标题',
+        },
+        welcome: {
+          type: TEXT,
+          allowNull: true,
+          comment: '欢迎标语',
+        },
+        icon_url: {
+          type: STRING(150),
+          allowNull: true,
+          comment: 'icon url',
         },
         api_url: {
           type: STRING(150),

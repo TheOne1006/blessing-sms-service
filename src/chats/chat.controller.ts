@@ -16,6 +16,8 @@ import {
   // ApiQuery,
 } from '@nestjs/swagger';
 
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
+
 import { SerializerInterceptor } from '../common/interceptors/serializer.interceptor';
 import { Roles, SerializerClass, User } from '../common/decorators';
 import { RolesGuard } from '../common/auth';
@@ -47,6 +49,8 @@ export class ChatController {
    *
    */
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('chat-lists')
   @ApiOperation({
     summary: '可用列表',
   })
@@ -90,7 +94,14 @@ export class ChatController {
     }
     // 超级用户不扣积分
     if (!(ROLE_SUPER_ADMIN in user.roles)) {
-      await this.userService.reduceCreditByPk(user.id, ins.credit);
+      const affectedCount = await this.userService.reduceCreditByPk(
+        user.id,
+        ins.credit,
+      );
+
+      if (!affectedCount) {
+        throw new Error('credit is not enough');
+      }
     }
 
     try {

@@ -9,6 +9,14 @@ import { config } from '../../config';
 
 const { APPID, SECRET, GRANT_TYPE } = config.WX_SERVER;
 
+interface wxCode2sessionData {
+  session_key: string;
+  openid: string;
+  unionid?: string;
+  errmsg?: string;
+  errcode?: number;
+}
+
 @Injectable()
 export class WxService {
   /**
@@ -25,11 +33,11 @@ export class WxService {
    * @param code string
    * @returns Promise
    */
-  async wxCode2session(code: string): Promise<any> {
+  async wxCode2session(code: string): Promise<wxCode2sessionData> {
     const url = `https://api.weixin.qq.com/sns/jscode2session?appid=${APPID}&secret=${SECRET}&js_code=${code}&grant_type=${GRANT_TYPE}`;
 
-    return firstValueFrom(
-      this.httpService.get(url).pipe(
+    const res = await firstValueFrom(
+      this.httpService.get<wxCode2sessionData>(url).pipe(
         catchError((error: AxiosError) => {
           console.log('AxiosError', error);
           const errorData: any = error.response.data;
@@ -38,5 +46,11 @@ export class WxService {
         }),
       ),
     );
+
+    if (res.data.errcode && res.data.errmsg) {
+      throw new Error(res.data.errmsg);
+    }
+
+    return res.data;
   }
 }

@@ -17,8 +17,12 @@ module.exports = {
           comment: 'id',
         },
         openid: { type: STRING(50), allowNull: false, comment: 'openid' },
-        unionid: { type: STRING(50), allowNull: false, comment: 'unionid' },
-        session: { type: STRING(50), allowNull: false, comment: 'session' },
+        unionid: {
+          type: STRING(50),
+          allowNull: true,
+          comment: 'unionid',
+        },
+        session: { type: STRING(50), allowNull: true, comment: 'session' },
         token: { type: STRING(50), allowNull: false, comment: 'token' },
         credit: { type: INTEGER },
         roles: {
@@ -55,9 +59,9 @@ module.exports = {
       },
     );
 
-    await queryInterface.addIndex(tableName, ['unionid'], {
+    await queryInterface.addIndex(tableName, ['openid'], {
       unique: true,
-      name: `idx_unionid`,
+      name: `idx_openid`,
     });
   },
 

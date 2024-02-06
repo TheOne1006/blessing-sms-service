@@ -4,6 +4,7 @@ const tableName = 'system-configs';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
+  // 更多
   up: async (queryInterface) => {
     await queryInterface.bulkInsert(
       tableName,
@@ -27,8 +28,8 @@ module.exports = {
         {
           id: 2,
           scope: 'frontEnd',
-          key: 'enableChats',
-          desc: 'enableChats',
+          key: 'enableChatIds',
+          desc: 'enableChatIds',
           format: 'array',
           array_value: JSON.stringify([2]),
           created_at: new Date(),
@@ -41,6 +42,28 @@ module.exports = {
           desc: 'mainChatId',
           format: 'int',
           int_value: 1,
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+
+        {
+          id: 5,
+          scope: 'frontEnd',
+          key: 'notice',
+          desc: 'notice',
+          format: 'text',
+          text_value: '欢迎使用拜年短信生成器',
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+
+        {
+          id: 6,
+          scope: 'frontEnd',
+          key: 'expiredDuration',
+          desc: 'expiredDuration',
+          format: 'int',
+          int_value: 1000 * 60 * 60 * 2, // 2hour
           created_at: new Date(),
           updated_at: new Date(),
         },

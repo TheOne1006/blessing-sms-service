@@ -8,18 +8,22 @@ export class ChatDto {
 
   title: string;
 
+  iconUrl: string;
+
+  welcome: string;
+
+  credit: number;
+
+  enabled: boolean;
+
   @Exclude()
   apiUrl: string;
 
   @Exclude()
   apiKey: string;
 
-  enabled: boolean;
-
   @Exclude()
   type: string;
-
-  credit: number;
 
   @Exclude()
   updatedAt: Date;

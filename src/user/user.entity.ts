@@ -15,16 +15,16 @@ export class User extends Model<User> {
   @Column({ type: DataType.STRING, allowNull: false })
   openid: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: true })
   unionid: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: true })
   session: string;
 
-  @Column(DataType.STRING)
+  @Column({ type: DataType.STRING, allowNull: false })
   token: string;
 
-  @Column(DataType.INTEGER)
+  @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
   credit: number;
 
   @Column(DataType.JSON)

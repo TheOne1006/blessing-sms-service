@@ -1,5 +1,5 @@
 import { pick, map } from 'lodash';
-import { Transaction, SaveOptions, Op } from 'sequelize';
+import { Transaction, SaveOptions, Op, WhereOptions } from 'sequelize';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
@@ -16,6 +16,11 @@ export class UserService {
     @InjectModel(User)
     private readonly userModel: typeof User,
   ) {}
+
+  // 生成 token
+  generateToken(openid: string): string {
+    return `${openid}-${Math.random().toString(16).slice(2, 12)}`;
+  }
 
   /**
    * 创建用户
@@ -50,15 +55,13 @@ export class UserService {
   }
 
   /**
-   * 根据token,查找用户
-   * @param {token} token
+   * 根据 findOne
+   * @param {WhereOptions} where
    * @returns Promise<UserDto>
    */
-  async findByToken(token: string): Promise<UserDto> {
+  async findOne(where: WhereOptions): Promise<UserDto> {
     return this.userModel.findOne({
-      where: {
-        token,
-      },
+      where,
     });
   }
 
@@ -102,12 +105,7 @@ export class UserService {
       options.transaction = transaction;
     }
 
-    const pickData = pick(updateUserDto, [
-      'openid',
-      'session',
-      'token',
-      'credit',
-    ]);
+    const pickData = pick(updateUserDto, ['session', 'token', 'credit']);
 
     map(pickData, (value: any, key: string) => {
       const originalValue = instance.get(key);
@@ -116,7 +114,7 @@ export class UserService {
       }
     });
 
-    await instance.save();
+    await instance.save(options);
 
     return instance;
   }

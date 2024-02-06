@@ -1,5 +1,6 @@
 import { Injectable, Inject, LoggerService } from '@nestjs/common';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 // import * as Redis from 'ioredis';
 // import { RedisService } from 'nestjs-redis';
 import { RequestUser } from '../interfaces';
@@ -13,6 +14,7 @@ export class AuthService {
   constructor(
     @Inject(WINSTON_MODULE_NEST_PROVIDER)
     private readonly logger: LoggerService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly userService: UserService,
   ) {}
 
@@ -38,9 +40,15 @@ export class AuthService {
     if (!token) {
       return user;
     }
+    const cacheKey = `user-${token}`;
+    const value = await this.cacheManager.get<string>(cacheKey);
+    if (value) {
+      const token_user = JSON.parse(value);
+      return token_user;
+    }
 
     try {
-      const token_user = await this.userService.findByToken(token);
+      const token_user = await this.userService.findOne({ token });
       user.id = token_user.id;
       user.openid = token_user.openid;
       user.roles = token_user.roles;
@@ -48,6 +56,7 @@ export class AuthService {
       user.token = token_user.token;
       user.session = token_user.session;
       user.credit = token_user.credit;
+      await this.cacheManager.set(cacheKey, JSON.stringify(user));
     } catch (error) {
       this.logger.error('token is error');
     }

@@ -34,7 +34,12 @@ import {
   // UpdateSystemConfigDto,
 } from './dtos';
 
+import { config } from '../../config';
+
+const prefix = config.API_V1;
+
 // @UseGuards(RolesGuard)
+@Controller(`${prefix}/system-configs`)
 @UseInterceptors(SerializerInterceptor)
 @SerializerClass(SystemConfigDto)
 @ApiSecurity('api_key')
