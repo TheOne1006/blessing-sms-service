@@ -10,9 +10,18 @@ import { CoreModule } from './core/core.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './user/user.module';
+import { SuggestModule } from './suggent/suggent.module';
+import { CommandCodeModule } from './command-code/commandCode.module';
+// import { SystemConfigsModule } from './system-configs/system-configs.module';
 
 @Module({
-  imports: [CoreModule, UsersModule],
+  imports: [
+    CoreModule,
+    UsersModule,
+    SuggestModule,
+    CommandCodeModule,
+    // SystemConfigsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

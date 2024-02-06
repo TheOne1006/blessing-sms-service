@@ -1,10 +1,10 @@
 import { Column, Model, Table, DataType } from 'sequelize-typescript';
 
 @Table({
-  tableName: 'users',
+  tableName: 'command-code',
   version: true,
 })
-export class User extends Model<User> {
+export class CommandCode extends Model<CommandCode> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -13,22 +13,10 @@ export class User extends Model<User> {
   id: number;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  openid: string;
+  code: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  unionid: string;
-
-  @Column({ type: DataType.STRING, allowNull: false })
-  session: string;
-
-  @Column(DataType.STRING)
-  token: string;
-
-  @Column(DataType.INTEGER)
+  @Column({ type: DataType.INTEGER, allowNull: false })
   credit: number;
-
-  @Column(DataType.JSON)
-  roles: string[];
 
   @Column({ type: DataType.DATE, field: 'created_at' })
   createdAt: Date;

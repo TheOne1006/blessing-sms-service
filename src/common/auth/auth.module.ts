@@ -5,24 +5,19 @@ import {
   MiddlewareConsumer,
   RequestMethod,
 } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthMiddleware } from './auth.middleware';
 import { AuthService } from './auth.service';
-import { config } from '../../../config';
+import { UserService } from '../../user/user.service';
+import { User } from '../../user/user.entity';
 
 @Module({
   imports: [
+    SequelizeModule.forFeature([User]),
     // HttpModule,
     // AppRedisModule,
-    JwtModule.register({
-      global: true,
-      secret: config.APP_CONFIG.JWT_SECRET,
-      signOptions: {
-        expiresIn: config.APP_CONFIG.JWT_SECRET_EXPIRESIN,
-      },
-    }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, UserService],
   exports: [AuthService],
 })
 export class AuthModule implements NestModule {

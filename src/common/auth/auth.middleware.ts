@@ -60,13 +60,16 @@ export class AuthMiddleware implements NestMiddleware {
     /**
      * 测试、开发环境 mock
      */
-    const [username, ...roles] = mockToken.split(',');
+    const [unionid, ...roles] = mockToken.split(',');
 
     const requestUser: RequestUser = {
       id: 1001,
-      username,
-      email: '',
+      unionid,
+      openid: '',
       roles,
+      session: '',
+      token: '',
+      credit: 0,
       ip,
     };
 

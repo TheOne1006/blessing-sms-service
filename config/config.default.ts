@@ -1,5 +1,8 @@
 import { Dialect } from 'sequelize/types';
 import { join } from 'path';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 /**
  * @ignore
@@ -33,6 +36,11 @@ export interface Iconfig {
     JWT_SECRET: string;
     JWT_SECRET_EXPIRESIN: string; // token 过期时间
   };
+  WX_SERVER: {
+    APPID: string;
+    SECRET: string;
+    GRANT_TYPE: string;
+  };
 }
 
 /**
@@ -63,5 +71,10 @@ export const config: Iconfig = {
   APP_CONFIG: {
     JWT_SECRET: '12132334234242',
     JWT_SECRET_EXPIRESIN: '10d', // token 过期时间
+  },
+  WX_SERVER: {
+    APPID: process.env.APPID,
+    SECRET: process.env.SECRET,
+    GRANT_TYPE: 'authorization_code',
   },
 };

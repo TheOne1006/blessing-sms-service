@@ -1,22 +1,14 @@
 import { Exclude } from 'class-transformer';
 
 /**
- * UserDto
+ * CommandCodeDto
  */
-export class UserDto {
+export class CommandCodeDto {
   id: number;
 
-  openid: string;
-
-  unionid: string;
-
-  session: string;
-
-  token: string;
+  code: string;
 
   credit: number;
-
-  roles: string[];
 
   @Exclude()
   updatedAt: Date;

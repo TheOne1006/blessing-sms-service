@@ -1,32 +1,10 @@
-// import * as _ from 'lodash';
+import { pick, map } from 'lodash';
 import { Transaction, SaveOptions } from 'sequelize';
-import { createHash } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 import { User } from './user.entity';
-import { CreateUserDto, UserDto } from './dtos';
-
-/**
- * 加密密码
- * @param password
- * @param salt
- */
-function encryptPassword(password: string, salt: string) {
-  const hash = createHash('md5');
-  hash.update(password + salt);
-  return hash.digest('hex');
-}
-
-/**
- * 生成 salt
- * @param length number
- */
-function genSalt(length: number = 8): string {
-  return Math.random()
-    .toString(16)
-    .slice(2, length + 2);
-}
+import { UserDto } from './dtos';
 
 /**
  * User Service
@@ -41,20 +19,14 @@ export class UserService {
 
   /**
    * 创建用户
-   * @param  {CreateUserDto} createUserDto
+   * @param  {Partial<UserDto>} createUserDto
    * @returns Promise
    */
-  async create(createUserDto: CreateUserDto): Promise<UserDto> {
-    const originPwd = createUserDto.password;
-    const salt = genSalt();
-
-    const password = encryptPassword(originPwd, salt);
-
+  async create(createUserDto: Partial<UserDto>): Promise<UserDto> {
     const data = new User({
       ...createUserDto,
-      salt,
-      password,
     });
+
     const instance = await data.save();
 
     return instance;
@@ -78,6 +50,19 @@ export class UserService {
   }
 
   /**
+   * 根据token,查找用户
+   * @param {token} token
+   * @returns Promise<UserDto>
+   */
+  async findByToken(token: string): Promise<UserDto> {
+    return this.userModel.findOne({
+      where: {
+        token,
+      },
+    });
+  }
+
+  /**
    * 根据id, 删除用户
    * @param id number
    * @returns Promise<UserDto>
@@ -96,35 +81,42 @@ export class UserService {
   }
 
   /**
-   * password 更新
-   * @param userID 用户名
-   * @param inputPassword 密码
-   * @param transaction
+   * 更新用户
+   * @param {number} id
+   * @param {Partial<UserDto>} updateUserDto
+   * @returns {Promise<UserDto>}
    */
-  async updatePasswordByPk(
-    userID: number,
-    inputPassword: string,
+  async updateByPk(
+    id: number,
+    updateUserDto: Partial<UserDto>,
     transaction?: Transaction,
-  ) {
-    const instance = await this.userModel.findByPk(userID);
+  ): Promise<UserDto> {
+    const instance = await this.userModel.findByPk(id);
 
     if (!instance) {
-      throw new Error('User not found');
+      throw new Error('instance not found');
     }
-
-    const salt = genSalt();
-    const password = encryptPassword(inputPassword, salt);
-
-    instance.salt = salt;
-    instance.password = password;
-    instance.updatedAt = new Date();
 
     const options: SaveOptions = {};
     if (transaction) {
       options.transaction = transaction;
     }
 
-    await instance.save(options);
+    const pickData = pick(updateUserDto, [
+      'openid',
+      'session',
+      'token',
+      'credit',
+    ]);
+
+    map(pickData, (value: any, key: string) => {
+      const originalValue = instance.get(key);
+      if (value !== originalValue) {
+        instance[key] = value;
+      }
+    });
+
+    await instance.save();
 
     return instance;
   }

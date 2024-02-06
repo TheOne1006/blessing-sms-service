@@ -4,9 +4,15 @@
 export interface RequestUser {
   id: number;
 
-  email: string;
+  openid: string;
 
-  username: string;
+  unionid: string;
+
+  session: string;
+
+  token: string;
+
+  credit: number;
 
   roles: string[];
 

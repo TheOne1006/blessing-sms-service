@@ -5,7 +5,7 @@ const tableName = 'users';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const { STRING, BOOLEAN, INTEGER, DATE } = Sequelize;
+    const { STRING, BOOLEAN, INTEGER, DATE, JSON } = Sequelize;
 
     await queryInterface.createTable(
       tableName,
@@ -21,6 +21,11 @@ module.exports = {
         session: { type: STRING(50), allowNull: false, comment: 'session' },
         token: { type: STRING(50), allowNull: false, comment: 'token' },
         credit: { type: INTEGER },
+        roles: {
+          type: JSON,
+          defaultValue: [],
+          comment: '角色',
+        },
         created_at: {
           type: DATE,
           allowNull: false,

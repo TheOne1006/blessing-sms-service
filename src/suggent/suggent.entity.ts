@@ -1,11 +1,10 @@
-
 import { Column, Model, Table, DataType } from 'sequelize-typescript';
 
 @Table({
-  tableName: 'users',
+  tableName: 'suggest',
   version: true,
 })
-export class User extends Model<User> {
+export class Suggest extends Model<Suggest> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -14,19 +13,10 @@ export class User extends Model<User> {
   id: number;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  username: string;
+  suggest: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  email: string;
-
-  @Column(DataType.JSON)
-  roles: string[];
-
-  @Column(DataType.STRING)
-  salt: string;
-
-  @Column(DataType.STRING)
-  password: string;
+  @Column({ type: DataType.INTEGER, allowNull: false, field: 'user_id' })
+  userId: number;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
   createdAt: Date;
