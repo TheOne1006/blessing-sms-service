@@ -7,8 +7,7 @@ log
 .git
 Dockerfile
 docker-compose.yml
-databases/db/
+databases
 documentation
 .github
-resources
-client
+docs
