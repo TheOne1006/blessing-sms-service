@@ -16,12 +16,11 @@
     "dialect": "sqlite"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "nestjs_example",
-    "storage": "./databases/db/database.sqlite",
+    "username": "wxzhufu",
+    "password": "kr6HWG3Tc72ijY6t",
+    "database": "wxzhufu",
     "host": "localhost",
-    "dialect": "sqlite"
+    "dialect": "mysql"
   },
   "mysql_demo": {
     "username": "root",

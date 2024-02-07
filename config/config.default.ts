@@ -32,10 +32,6 @@ export interface Iconfig {
     endPoint: string;
   };
   API_V1: string;
-  APP_CONFIG: {
-    JWT_SECRET: string;
-    JWT_SECRET_EXPIRESIN: string; // token 过期时间
-  };
   WX_SERVER: {
     APPID: string;
     SECRET: string;
@@ -68,10 +64,6 @@ export const config: Iconfig = {
     endPoint: 'api',
   },
   API_V1: 'v1',
-  APP_CONFIG: {
-    JWT_SECRET: '12132334234242',
-    JWT_SECRET_EXPIRESIN: '10d', // token 过期时间
-  },
   WX_SERVER: {
     APPID: process.env.APPID,
     SECRET: process.env.SECRET,

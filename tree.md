@@ -1,19 +1,29 @@
-nestjs-rest-api-boilerplate-2
+blessing-sms-service
 ├─.editorconfig
+├─.env
+├─.env.template
 ├─.prettierrc
 ├─.sequelizerc
 ├─README.md
-├─README_zh.md
+├─todo.md
 ├─tree.md
 ├─yarn.lock
 ├─test
+|  ├─helper.ts
+|  └init-test-db.ts
 ├─src
 |  ├─app.controller.ts
 |  ├─main.ts
-|  ├─users
-|  |   ├─users.controller.ts
-|  |   ├─dtos
-|  |   |  └index.ts
+|  ├─user
+|  |  ├─user.controller.ts
+|  |  ├─dtos
+|  |  |  └index.ts
+|  ├─system-configs
+|  |       ├─system-configs.controller.ts
+|  |       ├─dtos
+|  |       |  └index.ts
+|  ├─suggent
+|  |    └suggent.controller.ts
 |  ├─i18n
 |  |  ├─zh-cn
 |  |  ├─en
@@ -26,6 +36,7 @@ nestjs-rest-api-boilerplate-2
 |  |  ├─i18n
 |  |  |  └index.ts
 |  |  ├─filters
+|  |  |    ├─base-exception.interface.ts
 |  |  |    ├─index.ts
 |  |  |    ├─__tests__
 |  |  ├─database
@@ -46,20 +57,32 @@ nestjs-rest-api-boilerplate-2
 |  |   ├─auth
 |  |   |  ├─auth.middleware.ts
 |  |   |  ├─index.ts
-|  |   |  ├─roles.guard.ts
-|  |   |  ├─__tests__
+|  |   |  └roles.guard.ts
+|  ├─command-code
+|  |      ├─services
+|  |      |    └index.ts
+|  |      ├─entites
+|  |      |    └index.ts
+|  |      ├─dtos
+|  |      |  └index.ts
+|  |      ├─controllers
+|  |      |      └command-code.controller.ts
+|  ├─chats
+|  |   ├─chat.controller.ts
+|  |   ├─dtos
+|  |   |  └index.ts
 ├─docs
-|  ├─architecture.md
+|  ├─about_test.md
 |  ├─architecture_zh.md
-|  ├─development.md
 |  └development_zh.md
 ├─databases
+|     ├─seeders
 |     ├─migrations
 |     ├─db
 ├─config
 |   ├─config.default.ts
 |   ├─config.development.ts
 |   ├─config.production.ts
-|   ├─config.unittest.ts
+|   ├─config.test.ts
 |   └index.ts
 ├─.vscode
