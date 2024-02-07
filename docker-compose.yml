@@ -1,0 +1,9 @@
+version: '3.1'
+services:
+  kb-server:
+      build: './'
+      ports:
+        - '3003:3000'
+      volumes:
+        - '/etc/localtime:/etc/localtime:ro'
+        - '.env:/usr/src/app/.env:ro'

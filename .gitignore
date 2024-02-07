@@ -36,3 +36,4 @@ lerna-debug.log*
 
 # sqlit db
 databases/db
+config.private.json

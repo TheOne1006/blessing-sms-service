@@ -3,12 +3,14 @@
 # You can also use any other image from Docker Hub.
 FROM node:18-alpine AS builder
 
+WORKDIR /usr/src/app
 # Copy just package.json and package-lock.json
 # to speed up the build using Docker layer cache.
 COPY package*.json ./
 
 # Install all dependencies. 跳过 安全审计 速度更快
-RUN npm install --include=dev --audit=false
+# 设置 进度条
+RUN npm install --include=dev --audit=false --progress=true
 # Next, copy the source files using the user set
 # in the base image.
 COPY . ./
@@ -17,12 +19,12 @@ COPY . ./
 # Don't audit to speed up the installation.
 RUN npm run build
 
-
 # Create final image
 FROM node:18-alpine
 
+WORKDIR /usr/src/app
 # Copy only built JS files from builder image
-COPY --from=builder /home/myuser/dist ./dist
+COPY --from=builder /usr/src/app/dist ./dist
 
 # Copy just package.json and package-lock.json
 # to speed up the build using Docker layer cache.
@@ -41,6 +43,6 @@ RUN npm install --omit=dev --omit=optional \
 # Next, copy the remaining files and directories with the source code.
 # Since we do this after NPM install, quick build will be really fast
 # for most source file changes.
-COPY --chown=myuser . ./
+COPY . ./
 
 CMD yarn start:prod

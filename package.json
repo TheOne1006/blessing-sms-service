@@ -1,8 +1,8 @@
 {
-  "name": "nestjs-rest-api-boilerplate-2",
+  "name": "blessing-server",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "server for blessing",
+  "author": "theone",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "cross-env NODE_ENV=production node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -49,6 +49,7 @@
     "class-validator": "^0.14.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.1",
+    "mysql2": "^3.9.1",
     "nest-winston": "^1.9.4",
     "nestjs-i18n": "^10.4.0",
     "reflect-metadata": "^0.1.13",
