@@ -9,8 +9,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install all dependencies. 跳过 安全审计 速度更快
-# 设置 进度条
-RUN npm install --include=dev --audit=false --progress=true
+RUN npm install --include=dev --audit=false
 # Next, copy the source files using the user set
 # in the base image.
 COPY . ./
