@@ -43,6 +43,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/sequelize": "^10.0.0",
     "@nestjs/swagger": "^7.1.17",
+    "ajv": "^8.12.0",
     "axios": "^1.6.7",
     "cache-manager": "^5.4.0",
     "class-transformer": "^0.5.1",
