@@ -1,4 +1,3 @@
-import * as Ajv from 'ajv';
 import {
   // Body,
   Controller,
@@ -48,15 +47,15 @@ const prefix = config.API_V1;
 export class SystemConfigsController {
   constructor(private readonly systemConfigsService: SystemConfigsService) {}
 
-  validateValue(value: any, rules: any) {
-    const ajv = new Ajv();
+  // validateValue(value: any, rules: any) {
+  //   const ajv = new Ajv();
 
-    const isValid = ajv.validate(rules, value);
+  //   const isValid = ajv.validate(rules, value);
 
-    if (!isValid) {
-      throw new Error(ajv.errorsText(ajv.errors));
-    }
-  }
+  //   if (!isValid) {
+  //     throw new Error(ajv.errorsText(ajv.errors));
+  //   }
+  // }
 
   // @Post()
   // @Roles(ROLE_SUPER_ADMIN)
