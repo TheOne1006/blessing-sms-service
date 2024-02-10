@@ -73,7 +73,9 @@ export class UserController {
   @SerializerClass(UserDto)
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async getUserCurrent(@User() user: RequestUser): Promise<RequestUser> {
-    return user;
+    // 实时信息
+    const owner = await this.userService.findByPk(user.id);
+    return owner;
   }
 
   /**
@@ -101,13 +103,10 @@ export class UserController {
         openid: wxInfo.openid,
       });
 
-      const newToken = this.userService.generateToken(wxInfo.openid);
-
       if (findUser) {
-        // 更新
+        // 更新，不再更新 token
         const updateInfo = {
-          token: newToken,
-          unionid: wxInfo.unionid,
+          // unionid: wxInfo.unionid, // 咱是不用
           session: wxInfo.session_key,
         };
 
@@ -116,6 +115,8 @@ export class UserController {
         return user;
       }
 
+      const newToken = this.userService.generateToken(wxInfo.openid);
+
       // 插入
       const newUserInfo = {
         openid: wxInfo.openid,
@@ -123,7 +124,7 @@ export class UserController {
         session: wxInfo.session_key,
         token: newToken,
         // 基础 积分
-        credit: 30,
+        credit: 50,
         roles: [ROLE_AUTHENTICATED, ROLE_USER],
       };
 
