@@ -52,7 +52,8 @@ module.exports = {
         },
       },
       {
-        charset: 'utf8',
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_general_ci',
       },
     );
     await queryInterface.addIndex(tableName, ['code', 'user_id'], {

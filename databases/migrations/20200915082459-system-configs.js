@@ -83,7 +83,8 @@ module.exports = {
         is_deleted: { type: BOOLEAN, comment: '是否删除' },
       },
       {
-        charset: 'utf8',
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_general_ci',
       },
     );
 

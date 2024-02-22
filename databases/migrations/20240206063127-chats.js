@@ -21,6 +21,18 @@ module.exports = {
           allowNull: false,
           comment: '标题',
         },
+        btn_text: {
+          type: STRING(150),
+          allowNull: true,
+          comment: 'button 文案',
+        },
+        // ALTER TABLE `chats` ADD `btn_text` VARCHAR(150) NULL DEFAULT NULL COMMENT 'button 文案' AFTER `title`;
+        desc: {
+          type: STRING(250),
+          allowNull: true,
+          comment: '描述',
+        },
+        // ALTER TABLE `chats` ADD `desc` VARCHAR(250) NULL DEFAULT NULL COMMENT 'button 描述' AFTER `btn_text`;
         welcome: {
           type: TEXT,
           allowNull: true,
@@ -84,7 +96,8 @@ module.exports = {
         },
       },
       {
-        charset: 'utf8',
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_general_ci',
       },
     );
   },
