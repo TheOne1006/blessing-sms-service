@@ -10,6 +10,10 @@ export class ChatDto {
 
   iconUrl: string;
 
+  btnText: string;
+
+  desc: string;
+
   welcome: string;
 
   credit: number;
