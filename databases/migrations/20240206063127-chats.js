@@ -48,6 +48,12 @@ module.exports = {
           allowNull: false,
           comment: 'api url',
         },
+        // ALTER TABLE `chats` ADD `suggestion_api_url` VARCHAR(150) NULL DEFAULT NULL COMMENT 'suggestion api url' AFTER `api_url`;
+        suggestion_api_url: {
+          type: STRING(150),
+          allowNull: true,
+          comment: 'suggestion api url',
+        },
         api_key: {
           type: STRING(50),
           allowNull: false,
@@ -58,6 +64,27 @@ module.exports = {
           type: BOOLEAN,
           allowNull: false,
           comment: '是否激活',
+        },
+        // ALTER TABLE `chats` ADD `suggestion_enabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否 允许 suggestion' AFTER `enabled`;
+        suggestion_enabled: {
+          defaultValue: false,
+          type: BOOLEAN,
+          allowNull: false,
+          comment: '是否 允许 suggestion',
+        },
+        // ALTER TABLE `chats` ADD `replay_enabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否 允许 replay' AFTER `suggestion_enabled`;
+        replay_enabled: {
+          defaultValue: false,
+          type: BOOLEAN,
+          allowNull: false,
+          comment: '是否 允许 replay',
+        },
+        // ALTER TABLE `chats` ADD `start_suggestions` json DEFAULT NULL COMMENT '对话初始 推荐' AFTER `replay_enabled`;
+        start_suggestions: {
+          type: Sequelize.JSON,
+          defaultValue: '[]',
+          allowNull: true,
+          comment: '对话初始 推荐',
         },
         type: {
           type: STRING(50),

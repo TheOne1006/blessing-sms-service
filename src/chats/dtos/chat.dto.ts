@@ -20,8 +20,17 @@ export class ChatDto {
 
   enabled: boolean;
 
+  suggestionEnabled: boolean;
+
+  replayEnabled: boolean;
+
+  startSuggestions: string[];
+
   @Exclude()
   apiUrl: string;
+
+  @Exclude()
+  suggestionApiUrl: string;
 
   @Exclude()
   apiKey: string;

@@ -23,7 +23,12 @@ import { Roles, SerializerClass, User } from '../common/decorators';
 import { RolesGuard } from '../common/auth';
 import { ROLE_AUTHENTICATED, ROLE_SUPER_ADMIN } from '../common/constants';
 import { RequestUser } from '../common/interfaces';
-import { ChatRunResDto, ChatDto, ChatRunRepDto } from './dtos';
+import {
+  ChatRunResDto,
+  ChatDto,
+  ChatRunRepDto,
+  ChatSuggestionRepDto,
+} from './dtos';
 
 import { config } from '../../config';
 import { ChatService } from './chat.service';
@@ -65,7 +70,7 @@ export class ChatController {
   }
 
   /**
-   * 获取用户自身数据
+   * 获取 gpt 信息
    *
    * @param user
    */
@@ -113,6 +118,80 @@ export class ChatController {
         resData.taskId,
       );
       return result;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  /**
+   * 获取 suggestion 信息
+   *
+   */
+  @Post(':id/suggestion')
+  @UseGuards(RolesGuard)
+  @Roles(ROLE_AUTHENTICATED)
+  @ApiOperation({
+    summary: '获取推荐信息',
+  })
+  @SerializerClass(ChatSuggestionRepDto)
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'chat id',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  async suggestion(
+    @Param('id') id: number,
+    @Body() resData: ChatRunResDto,
+    @User() user: RequestUser,
+  ): Promise<ChatSuggestionRepDto> {
+    const ins = await this.chatService.findByPk(id);
+
+    if (!ins.enabled) {
+      throw new Error('chat is not enabled');
+    }
+
+    if (!ins.suggestionEnabled) {
+      throw new Error('suggestion is not enabled');
+    }
+
+    if (!ins.suggestionApiUrl) {
+      throw new Error('suggestion url is not empty');
+    }
+
+    // 超级用户不扣积分
+    if (!(ROLE_SUPER_ADMIN in user.roles)) {
+      const affectedCount = await this.userService.reduceCreditByPk(
+        user.id,
+        ins.credit,
+      );
+
+      if (!affectedCount) {
+        throw new Error('credit is not enough');
+      }
+    }
+
+    try {
+      const result = await this.flowiseService.suggestion(
+        ins.suggestionApiUrl,
+        ins.apiKey,
+        resData.query,
+        resData.history,
+      );
+
+      // check Result,is string[]
+
+      if (!Array.isArray(result)) {
+        throw new Error('suggestion result is not Array');
+      }
+
+      const finalResult = result.filter((item) => {
+        return typeof item === 'string' && item;
+      });
+
+      return {
+        suggestions: finalResult,
+      };
     } catch (error) {
       throw new Error(error.message);
     }
