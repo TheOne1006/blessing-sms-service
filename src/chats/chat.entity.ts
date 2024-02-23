@@ -30,11 +30,39 @@ export class Chat extends Model<Chat> {
   @Column({ type: DataType.STRING, allowNull: false, field: 'api_url' })
   apiUrl: string;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    field: 'suggestion_api_url',
+  })
+  suggestionApiUrl: string;
+
   @Column({ type: DataType.STRING, allowNull: false, field: 'api_key' })
   apiKey: string;
 
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   enabled: boolean;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    field: 'suggestion_enabled',
+    defaultValue: false,
+  })
+  suggestionEnabled: boolean;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    field: 'replay_enabled',
+    defaultValue: false,
+  })
+  replayEnabled: boolean;
+
+  @Column({
+    type: DataType.JSON,
+    field: 'start_suggestions',
+    defaultValue: [],
+  })
+  startSuggestions: any;
 
   @Column({ type: DataType.INTEGER, defaultValue: 0 })
   credit: number;
