@@ -26,6 +26,8 @@ export class ChatDto {
 
   startSuggestions: string[];
 
+  scheduledMs: number;
+
   @Exclude()
   apiUrl: string;
 

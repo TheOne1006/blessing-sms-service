@@ -86,11 +86,19 @@ module.exports = {
           allowNull: true,
           comment: '对话初始 推荐',
         },
+        // ALTER TABLE `chats` ADD `scheduled_ms` int DEFAULT 10000 COMMENT '预计时间' AFTER `start_suggestions`;
+        scheduled_ms: {
+          type: INTEGER,
+          defaultValue: 10000,
+          allowNull: false,
+          comment: '预计时间 ms',
+        },
         type: {
           type: STRING(50),
           allowNull: false,
           comment: 'flowise、dify',
         },
+
         credit: {
           type: INTEGER,
           defaultValue: 1,
