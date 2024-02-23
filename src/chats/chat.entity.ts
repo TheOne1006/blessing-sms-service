@@ -64,6 +64,13 @@ export class Chat extends Model<Chat> {
   })
   startSuggestions: any;
 
+  @Column({
+    type: DataType.INTEGER,
+    field: 'scheduled_ms',
+    defaultValue: 10000,
+  })
+  scheduledMs: number;
+
   @Column({ type: DataType.INTEGER, defaultValue: 0 })
   credit: number;
 
